@@ -3,60 +3,73 @@ import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 import { colors } from '../../theme/colors';
 import { typography } from '../../theme/typography';
-
-interface Entry {
-  id: string;
-  icon: keyof typeof MaterialIcons.glyphMap;
-  name: string;
-  time: string;
-  calories: number;
-}
+import type { DailyLog } from '../../services/UserDataService';
 
 interface RecentEntriesSectionProps {
-  entries: Entry[];
+  entries: DailyLog[];
   onViewAll?: () => void;
-  onEntryPress?: (entry: Entry) => void;
 }
 
-const DEFAULT_ENTRIES: Entry[] = [
-  { id: '1', icon: 'local-cafe', name: 'Oatmeal & Coffee', time: '8:30 AM', calories: 320 },
-  { id: '2', icon: 'restaurant', name: 'Grilled Chicken Salad', time: '1:15 PM', calories: 450 },
-];
+const SOURCE_ICONS: Record<string, keyof typeof MaterialIcons.glyphMap> = {
+  text: 'edit-note',
+  voice: 'mic',
+  image: 'photo-camera',
+};
 
-export function RecentEntriesSection({
-  entries = DEFAULT_ENTRIES,
-  onViewAll,
-  onEntryPress,
-}: RecentEntriesSectionProps) {
+function formatTime(timestamp: string): string {
+  try {
+    const date = new Date(timestamp);
+    return date.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
+  } catch {
+    return '';
+  }
+}
+
+export function RecentEntriesSection({ entries, onViewAll }: RecentEntriesSectionProps) {
+  const isEmpty = entries.length === 0;
+
   return (
     <View style={styles.section}>
       <View style={styles.header}>
         <Text style={styles.sectionTitle}>Recent Entries</Text>
-        <TouchableOpacity onPress={onViewAll}>
-          <Text style={styles.viewAllText}>View All</Text>
-        </TouchableOpacity>
+        {!isEmpty && (
+          <TouchableOpacity onPress={onViewAll}>
+            <Text style={styles.viewAllText}>View All</Text>
+          </TouchableOpacity>
+        )}
       </View>
 
       <View style={styles.listContainer}>
-        {entries.map((entry, index) => (
-          <TouchableOpacity
-            key={entry.id}
-            style={[styles.entryItem, index < entries.length - 1 && styles.entryItemBorder]}
-            onPress={() => onEntryPress?.(entry)}
-            activeOpacity={0.7}
-          >
-            <View style={styles.entryLeft}>
-              <View style={styles.entryIconContainer}>
-                <MaterialIcons name={entry.icon} size={20} color={colors.onSurfaceVariant} />
+        {isEmpty ? (
+          <View style={styles.emptyState}>
+            <MaterialIcons name="restaurant" size={24} color={colors.onSurfaceVariant} />
+            <Text style={styles.emptyText}>No entries yet. Log a meal to get started.</Text>
+          </View>
+        ) : (
+          entries.map((entry, index) => (
+            <View
+              key={entry.id}
+              style={[styles.entryItem, index < entries.length - 1 && styles.entryItemBorder]}
+            >
+              <View style={styles.entryLeft}>
+                <View style={styles.entryIconContainer}>
+                  <MaterialIcons
+                    name={SOURCE_ICONS[entry.source] || 'restaurant'}
+                    size={20}
+                    color={colors.onSurfaceVariant}
+                  />
+                </View>
+                <View>
+                  <Text style={styles.entryName} numberOfLines={1}>{entry.food_name}</Text>
+                  <Text style={styles.entryTime}>
+                    {formatTime(entry.timestamp)} · {entry.grams}g
+                  </Text>
+                </View>
               </View>
-              <View>
-                <Text style={styles.entryName}>{entry.name}</Text>
-                <Text style={styles.entryTime}>{entry.time}</Text>
-              </View>
+              <Text style={styles.entryCalories}>{Math.round(entry.kcal)} kcal</Text>
             </View>
-            <Text style={styles.entryCalories}>{entry.calories} kcal</Text>
-          </TouchableOpacity>
-        ))}
+          ))
+        )}
       </View>
     </View>
   );
@@ -92,6 +105,16 @@ const styles = StyleSheet.create({
     shadowRadius: 3,
     elevation: 2,
   },
+  emptyState: {
+    alignItems: 'center',
+    gap: 8,
+    padding: 24,
+  },
+  emptyText: {
+    ...typography.bodyMd,
+    color: colors.onSurfaceVariant,
+    textAlign: 'center',
+  },
   entryItem: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -106,6 +129,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 12,
+    flex: 1,
+    minWidth: 0,
   },
   entryIconContainer: {
     width: 40,

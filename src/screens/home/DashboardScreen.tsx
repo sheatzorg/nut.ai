@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { View, ScrollView, StyleSheet, StatusBar } from 'react-native';
 import { colors } from '../../theme/colors';
 import { TopAppBar } from './TopAppBar';
@@ -6,6 +6,7 @@ import { DailyProgressSection } from './DailyProgressSection';
 import { QuickLogSection } from './QuickLogSection';
 import { RecentEntriesSection } from './RecentEntriesSection';
 import { BottomNavBar } from './BottomNavBar';
+import { getTodayTotals, getRecentEntries, type DailyTotals, type DailyLog } from '../../services/UserDataService';
 
 interface DashboardScreenProps {
   onNavigate?: (screen: string) => void;
@@ -13,6 +14,34 @@ interface DashboardScreenProps {
 
 export function DashboardScreen({ onNavigate }: DashboardScreenProps) {
   const [activeTab, setActiveTab] = useState('home');
+  const [totals, setTotals] = useState<DailyTotals>({
+    totalKcal: 0, totalProtein: 0, totalFat: 0, totalCarb: 0, totalFiber: 0, mealCount: 0,
+  });
+  const [recentEntries, setRecentEntries] = useState<DailyLog[]>([]);
+
+  const loadData = useCallback(async () => {
+    try {
+      const [todayTotals, entries] = await Promise.all([
+        getTodayTotals(),
+        getRecentEntries(10),
+      ]);
+      setTotals(todayTotals);
+      setRecentEntries(entries);
+    } catch (e) {
+      console.error('Failed to load dashboard data:', e);
+    }
+  }, []);
+
+  // Load on mount
+  useEffect(() => {
+    loadData();
+  }, []);
+
+  // Reload when screen comes back into focus (simplified — no navigation library)
+  useEffect(() => {
+    const interval = setInterval(loadData, 5000);
+    return () => clearInterval(interval);
+  }, [loadData]);
 
   const handleTabPress = (tab: string) => {
     setActiveTab(tab);
@@ -32,11 +61,11 @@ export function DashboardScreen({ onNavigate }: DashboardScreenProps) {
         showsVerticalScrollIndicator={false}
       >
         <DailyProgressSection
-          calories={1840}
+          calories={totals.totalKcal}
           calorieGoal={2400}
-          protein={{ current: 82, goal: 150 }}
-          carbs={{ current: 190, goal: 270 }}
-          fats={{ current: 45, goal: 80 }}
+          protein={{ current: Math.round(totals.totalProtein), goal: 150 }}
+          carbs={{ current: Math.round(totals.totalCarb), goal: 270 }}
+          fats={{ current: Math.round(totals.totalFat), goal: 80 }}
         />
 
         <QuickLogSection
@@ -45,7 +74,7 @@ export function DashboardScreen({ onNavigate }: DashboardScreenProps) {
           onPhotoPress={() => onNavigate?.('image')}
         />
 
-        <RecentEntriesSection entries={[]} />
+        <RecentEntriesSection entries={recentEntries} />
       </ScrollView>
 
       <BottomNavBar activeTab={activeTab} onTabPress={handleTabPress} />

@@ -5,6 +5,7 @@ import { VoiceScreen } from './src/screens/voice/VoiceScreen';
 import { TextScreen } from './src/screens/text/TextScreen';
 import { ImageScreen } from './src/screens/image/ImageScreen';
 import { initDatabase } from './src/services/DatabaseService';
+import { initUserDatabase } from './src/services/UserDataService';
 import { initAI } from './src/services/AIService';
 
 type Screen = 'home' | 'voice' | 'text' | 'image';
@@ -15,7 +16,7 @@ export default function App() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    Promise.all([initDatabase(), Promise.resolve(initAI())])
+    Promise.all([initDatabase(), initUserDatabase(), Promise.resolve(initAI())])
       .then(() => setReady(true))
       .catch((e) => {
         console.error('Init failed:', e);

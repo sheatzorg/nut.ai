@@ -10,7 +10,7 @@ import { ManualEntry, ManualEntryToggle } from './components/ManualEntry';
 import { BottomNavBar } from '../home/BottomNavBar';
 import { useVoiceRecognition } from './hooks/useVoiceRecognition';
 import { searchFoodsFromTranscript } from '../../services/VoiceService';
-import { calculateNutrients } from '../../services/DatabaseService';
+import { logMeal } from '../../services/UserDataService';
 import { formatTime } from './lib/app';
 import type { NavId } from './lib/app';
 
@@ -55,8 +55,27 @@ export function VoiceScreen({ onNavigate }: VoiceScreenProps) {
     }
   };
 
-  const handleConfirm = () => {
+  const handleConfirm = async () => {
     if (foods.length === 0 || confirmed) return;
+
+    // Save to database
+    try {
+      await logMeal(
+        foods.map((f) => ({
+          food_name: f.name,
+          grams: 100,
+          kcal: f.kcal,
+          protein: f.protein,
+          fat: f.fat,
+          carb: f.carb,
+          fiber: f.fiber,
+          source: 'voice' as const,
+        }))
+      );
+    } catch (e) {
+      console.error('Failed to save meal:', e);
+    }
+
     setConfirmed(true);
   };
 

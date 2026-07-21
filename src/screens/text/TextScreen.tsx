@@ -11,6 +11,7 @@ import { NutritionResult } from './components/NutritionResult';
 import { BottomNavBar } from '../home/BottomNavBar';
 import { useRecognition } from './hooks/useRecognition';
 import { roundMacros, sumMacros } from './lib/nutrition';
+import { logMeal } from '../../services/UserDataService';
 import type { EditItem } from './lib/types';
 
 type Stage = 'compose' | 'verify' | 'analyzing' | 'result';
@@ -73,12 +74,33 @@ export function TextScreen({ onNavigate }: TextScreenProps) {
     timer.current = setTimeout(() => setStage('result'), 1100);
   };
 
-  const handleNew = () => {
+  const handleNew = async () => {
     if (timer.current) clearTimeout(timer.current);
+
+    // Save approved items to database
+    if (selected.length > 0) {
+      try {
+        await logMeal(
+          selected.map((item) => ({
+            food_name: item.name,
+            grams: item.quantity,
+            kcal: (item.perUnit.kcal * item.quantity) / 100,
+            protein: (item.perUnit.protein * item.quantity) / 100,
+            fat: (item.perUnit.fat * item.quantity) / 100,
+            carb: (item.perUnit.carbs * item.quantity) / 100,
+            fiber: 0,
+            source: 'text' as const,
+          }))
+        );
+      } catch (e) {
+        console.error('Failed to save meal:', e);
+      }
+    }
+
     setStage('compose');
     setRawText('');
     setItems([]);
-    setToast('Ready for a new meal');
+    setToast('Meal logged!');
   };
 
   const setQty = (uid: string, qty: number) => {

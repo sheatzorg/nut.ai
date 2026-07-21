@@ -10,6 +10,7 @@ import { BottomNavBar } from '../home/BottomNavBar';
 import { roundMacros, sumMacros } from '../text/lib/nutrition';
 import { recognizeFood, getIngredientQuantities, initAI } from '../../services/AIService';
 import { searchFood } from '../../services/DatabaseService';
+import { logMeal } from '../../services/UserDataService';
 import type { EditItem } from '../text/lib/types';
 
 type Stage = 'select' | 'analyzing' | 'verify' | 'result';
@@ -113,7 +114,27 @@ export function ImageScreen({ onNavigate }: ImageScreenProps) {
 
   const calculate = () => setStage('result');
 
-  const handleNew = () => {
+  const handleNew = async () => {
+    // Save approved items to database
+    if (selected.length > 0) {
+      try {
+        await logMeal(
+          selected.map((item) => ({
+            food_name: item.name,
+            grams: item.quantity,
+            kcal: (item.perUnit.kcal * item.quantity) / 100,
+            protein: (item.perUnit.protein * item.quantity) / 100,
+            fat: (item.perUnit.fat * item.quantity) / 100,
+            carb: (item.perUnit.carbs * item.quantity) / 100,
+            fiber: 0,
+            source: 'image' as const,
+          }))
+        );
+      } catch (e) {
+        console.error('Failed to save meal:', e);
+      }
+    }
+
     setImages([]);
     setItems([]);
     setStage('select');
