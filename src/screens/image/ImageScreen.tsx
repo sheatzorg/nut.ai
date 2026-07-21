@@ -49,7 +49,7 @@ export function ImageScreen({ onNavigate }: ImageScreenProps) {
       if (!imageUri) throw new Error('No image');
 
       // Run AI inference
-      const prediction = await recognizeFood(imageUri, null);
+      const prediction = await recognizeFood(imageUri);
 
       if (!prediction) {
         // Fallback: show mock data if AI fails
