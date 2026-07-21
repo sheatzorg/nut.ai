@@ -1,13 +1,11 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { MaterialIcons, MaterialCommunityIcons } from '@expo/vector-icons';
-import { nutritionFor, formatQty } from '../lib/nutrition';
-import { FoodGlyph } from './FoodGlyph';
-import type { FoodItem } from '../lib/types';
+import type { FoodResult } from '../../../services/DatabaseService';
 import type { RecognitionStatus } from '../hooks/useRecognition';
 
 interface LiveRecognitionProps {
-  items: FoodItem[];
+  items: FoodResult[];
   recognizing: boolean;
   hasText: boolean;
   error: boolean;
@@ -57,32 +55,29 @@ export function LiveRecognition({ items, recognizing, hasText, error }: LiveReco
           </View>
           <Text style={styles.emptyText}>
             {hasText
-              ? 'No foods recognized yet — try clearer item names.'
-              : 'Start typing — recognized foods & quantities appear here.'}
+              ? 'No foods recognized — try different names.'
+              : 'Start typing — foods from the USDA database appear here.'}
           </Text>
         </View>
       ) : (
         <View style={styles.itemsList}>
-          {items.map((item) => {
-            const n = nutritionFor(item);
-            return (
-              <View key={item.id} style={styles.itemCard}>
-                <View style={styles.itemIcon}>
-                  <FoodGlyph emoji={item.emoji} />
-                </View>
-                <View style={styles.itemInfo}>
-                  <Text style={styles.itemName} numberOfLines={1}>{item.name}</Text>
-                  <Text style={styles.itemMatch} numberOfLines={1}>
-                    {item.matchedText ? `"${item.matchedText}"` : item.unit}
-                  </Text>
-                </View>
-                <View style={styles.itemRight}>
-                  <Text style={styles.itemQty}>{formatQty(item.quantity)} {item.unit}</Text>
-                  <Text style={styles.itemKcal}>{n.kcal} kcal</Text>
-                </View>
+          {items.map((item) => (
+            <View key={item.id} style={styles.itemCard}>
+              <View style={styles.itemIcon}>
+                <MaterialCommunityIcons name="food-variant" size={20} color="#2563eb" />
               </View>
-            );
-          })}
+              <View style={styles.itemInfo}>
+                <Text style={styles.itemName} numberOfLines={1}>{item.name}</Text>
+                <Text style={styles.itemDetail}>
+                  per 100g
+                </Text>
+              </View>
+              <View style={styles.itemRight}>
+                <Text style={styles.itemKcal}>{Math.round(item.kcal)} kcal</Text>
+                <Text style={styles.itemMacros}>P:{item.protein.toFixed(1)} C:{item.carb.toFixed(1)} F:{item.fat.toFixed(1)}</Text>
+              </View>
+            </View>
+          ))}
         </View>
       )}
     </View>
@@ -118,8 +113,8 @@ const styles = StyleSheet.create({
   itemIcon: { width: 40, height: 40, borderRadius: 8, backgroundColor: '#eff6ff', alignItems: 'center', justifyContent: 'center' },
   itemInfo: { flex: 1, minWidth: 0 },
   itemName: { fontSize: 14, fontWeight: '600', color: '#0f172a' },
-  itemMatch: { fontSize: 12, fontStyle: 'italic', color: '#94a3b8' },
+  itemDetail: { fontSize: 12, color: '#94a3b8' },
   itemRight: { alignItems: 'flex-end' },
-  itemQty: { fontSize: 12, fontWeight: '700', color: '#0f172a' },
-  itemKcal: { fontSize: 11, fontWeight: '500', color: '#94a3b8' },
+  itemKcal: { fontSize: 12, fontWeight: '700', color: '#0f172a' },
+  itemMacros: { fontSize: 10, fontWeight: '500', color: '#94a3b8', fontVariant: ['tabular-nums'] },
 });

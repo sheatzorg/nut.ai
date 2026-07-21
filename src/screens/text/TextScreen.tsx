@@ -42,7 +42,19 @@ export function TextScreen({ onNavigate }: TextScreenProps) {
   const handleVerify = () => {
     setItems(
       liveItems.map((item, idx) => ({
-        ...item,
+        id: String(item.id),
+        name: item.name,
+        emoji: undefined,
+        quantity: 100,
+        unit: 'g',
+        step: 25,
+        matchedText: rawText.trim().slice(0, 20),
+        perUnit: {
+          kcal: item.kcal,
+          protein: item.protein,
+          carbs: item.carb,
+          fat: item.fat,
+        },
         uid: `${item.id}-${idx}`,
         approved: true,
       })),

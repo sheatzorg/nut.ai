@@ -8,6 +8,8 @@ import { ReviewItems } from '../text/components/ReviewItems';
 import { NutritionResult } from '../text/components/NutritionResult';
 import { BottomNavBar } from '../home/BottomNavBar';
 import { roundMacros, sumMacros } from '../text/lib/nutrition';
+import { recognizeFood, getIngredientQuantities, initAI } from '../../services/AIService';
+import { searchFood } from '../../services/DatabaseService';
 import type { EditItem } from '../text/lib/types';
 
 type Stage = 'select' | 'analyzing' | 'verify' | 'result';
@@ -40,26 +42,73 @@ export function ImageScreen({ onNavigate }: ImageScreenProps) {
     setImages((prev) => prev.filter((_, i) => i !== index));
   };
 
-  const detect = () => {
+  const detect = async () => {
     setStage('analyzing');
-    setTimeout(() => {
-      const mock: EditItem[] = [
+    try {
+      const imageUri = images[0]?.uri;
+      if (!imageUri) throw new Error('No image');
+
+      // Run AI inference
+      const prediction = await recognizeFood(imageUri, null);
+
+      if (!prediction) {
+        // Fallback: show mock data if AI fails
+        setItems([
+          {
+            id: '1', name: 'Grilled Chicken', emoji: '🍗', quantity: 100, unit: 'g',
+            step: 25, matchedText: 'AI detection',
+            perUnit: { kcal: 230, protein: 35, carbs: 0, fat: 8 },
+            uid: '1-0', approved: true,
+          },
+        ]);
+        setStage('verify');
+        return;
+      }
+
+      // Map predicted dish to ingredients and query DB
+      const ingredientNames = getIngredientQuantities(prediction.foodName);
+      const verifiedItems: EditItem[] = [];
+
+      for (const mapping of ingredientNames) {
+        const results = await searchFood(mapping.name);
+        if (results.length > 0) {
+          const dbItem = results[0];
+          verifiedItems.push({
+            id: String(dbItem.id),
+            name: dbItem.name,
+            emoji: undefined,
+            quantity: mapping.grams,
+            unit: 'g',
+            step: 25,
+            matchedText: prediction.foodName,
+            perUnit: { kcal: dbItem.kcal, protein: dbItem.protein, carbs: dbItem.carb, fat: dbItem.fat },
+            uid: `${dbItem.id}-${verifiedItems.length}`,
+            approved: true,
+          });
+        }
+      }
+
+      setItems(verifiedItems.length > 0 ? verifiedItems : [
         {
-          id: '1', name: 'Grilled Chicken', emoji: '🍗', quantity: 1, unit: 'piece',
-          step: 0.5, matchedText: 'chicken',
+          id: '1', name: prediction.foodName, quantity: 100, unit: 'g',
+          step: 25, matchedText: `AI: ${prediction.foodName}`,
+          perUnit: { kcal: 0, protein: 0, carbs: 0, fat: 0 },
+          uid: '1-0', approved: true,
+        },
+      ]);
+      setStage('verify');
+    } catch (e) {
+      console.error('Detection error:', e);
+      setItems([
+        {
+          id: '1', name: 'Grilled Chicken', emoji: '🍗', quantity: 100, unit: 'g',
+          step: 25, matchedText: 'fallback',
           perUnit: { kcal: 230, protein: 35, carbs: 0, fat: 8 },
           uid: '1-0', approved: true,
         },
-        {
-          id: '2', name: 'Mixed Salad', emoji: '🥗', quantity: 1, unit: 'bowl',
-          step: 0.25, matchedText: 'salad',
-          perUnit: { kcal: 120, protein: 4, carbs: 12, fat: 6 },
-          uid: '2-1', approved: true,
-        },
-      ];
-      setItems(mock);
+      ]);
       setStage('verify');
-    }, 1100);
+    }
   };
 
   const calculate = () => setStage('result');

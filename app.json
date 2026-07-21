@@ -6,8 +6,12 @@
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
+    "extra": {
+      "nutrientsDb": "./assets/nutrients.db"
+    },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.arkabhowal.nutai"
     },
     "android": {
       "adaptiveIcon": {
@@ -16,10 +20,21 @@
         "backgroundImage": "./assets/android-icon-background.png",
         "monochromeImage": "./assets/android-icon-monochrome.png"
       },
-      "predictiveBackGestureEnabled": false
+      "predictiveBackGestureEnabled": false,
+      "package": "com.arkabhowal.nutai"
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "plugins": [
+      "expo-sqlite",
+      [
+        "expo-file-system",
+        {
+          "photosPermission": "Allow Nut.ai to access your photos for meal scanning."
+        }
+      ],
+      "react-native-fast-tflite"
+    ]
   }
 }

@@ -1,0 +1,516 @@
+{
+  "apple_pie": [
+    {"name": "apple", "grams": 200},
+    {"name": "wheat flour", "grams": 150},
+    {"name": "butter", "grams": 100},
+    {"name": "sugar", "grams": 100}
+  ],
+  "baby_back_ribs": [
+    {"name": "pork", "grams": 400},
+    {"name": "bbq sauce", "grams": 60}
+  ],
+  "baklava": [
+    {"name": "phyllo dough", "grams": 200},
+    {"name": "butter", "grams": 150},
+    {"name": "walnuts", "grams": 150},
+    {"name": "honey", "grams": 100}
+  ],
+  "beef_carpaccio": [
+    {"name": "beef", "grams": 120},
+    {"name": "parmesan cheese", "grams": 30},
+    {"name": "arugula", "grams": 30}
+  ],
+  "beef_tartare": [
+    {"name": "beef", "grams": 150},
+    {"name": "egg", "grams": 50},
+    {"name": "onion", "grams": 30}
+  ],
+  "beet_salad": [
+    {"name": "beets", "grams": 200},
+    {"name": "goat cheese", "grams": 60},
+    {"name": "walnuts", "grams": 30}
+  ],
+  "beignets": [
+    {"name": "wheat flour", "grams": 200},
+    {"name": "butter", "grams": 50},
+    {"name": "sugar", "grams": 100}
+  ],
+  "bibimbap": [
+    {"name": "rice", "grams": 200},
+    {"name": "beef", "grams": 100},
+    {"name": "egg", "grams": 50},
+    {"name": "spinach", "grams": 50}
+  ],
+  "bread_pudding": [
+    {"name": "bread", "grams": 300},
+    {"name": "egg", "grams": 100},
+    {"name": "milk", "grams": 200},
+    {"name": "sugar", "grams": 80}
+  ],
+  "breakfast_burrito": [
+    {"name": "flour tortilla", "grams": 80},
+    {"name": "egg", "grams": 100},
+    {"name": "cheese", "grams": 40},
+    {"name": "sausage", "grams": 60}
+  ],
+  "bruschetta": [
+    {"name": "bread", "grams": 100},
+    {"name": "tomato", "grams": 150},
+    {"name": "olive oil", "grams": 15}
+  ],
+  "caesar_salad": [
+    {"name": "romaine lettuce", "grams": 150},
+    {"name": "parmesan cheese", "grams": 30},
+    {"name": "croutons", "grams": 40},
+    {"name": "caesar dressing", "grams": 30}
+  ],
+  "cannoli": [
+    {"name": "ricotta cheese", "grams": 200},
+    {"name": "sugar", "grams": 80},
+    {"name": "flour", "grams": 150}
+  ],
+  "caprese_salad": [
+    {"name": "mozzarella cheese", "grams": 150},
+    {"name": "tomato", "grams": 200},
+    {"name": "olive oil", "grams": 15}
+  ],
+  "carrot_cake": [
+    {"name": "carrots", "grams": 300},
+    {"name": "wheat flour", "grams": 200},
+    {"name": "sugar", "grams": 200},
+    {"name": "eggs", "grams": 100}
+  ],
+  "ceviche": [
+    {"name": "raw fish", "grams": 200},
+    {"name": "lime juice", "grams": 60},
+    {"name": "onion", "grams": 50},
+    {"name": "cilantro", "grams": 10}
+  ],
+  "cheesecake": [
+    {"name": "cream cheese", "grams": 400},
+    {"name": "sugar", "grams": 150},
+    {"name": "graham cracker", "grams": 150},
+    {"name": "egg", "grams": 100}
+  ],
+  "cheese_plate": [
+    {"name": "cheddar cheese", "grams": 150},
+    {"name": "brie cheese", "grams": 100},
+    {"name": "grapes", "grams": 100},
+    {"name": "crackers", "grams": 80}
+  ],
+  "chicken_curry": [
+    {"name": "chicken", "grams": 400},
+    {"name": "coconut milk", "grams": 200},
+    {"name": "curry paste", "grams": 30},
+    {"name": "rice", "grams": 200}
+  ],
+  "chicken_quesadilla": [
+    {"name": "flour tortilla", "grams": 80},
+    {"name": "chicken", "grams": 100},
+    {"name": "cheese", "grams": 60}
+  ],
+  "chicken_wings": [
+    {"name": "chicken wings", "grams": 500},
+    {"name": "hot sauce", "grams": 60},
+    {"name": "butter", "grams": 30}
+  ],
+  "chocolate_cake": [
+    {"name": "chocolate", "grams": 200},
+    {"name": "wheat flour", "grams": 200},
+    {"name": "sugar", "grams": 200},
+    {"name": "egg", "grams": 100}
+  ],
+  "chocolate_mousse": [
+    {"name": "chocolate", "grams": 200},
+    {"name": "egg", "grams": 100},
+    {"name": "cream", "grams": 200},
+    {"name": "sugar", "grams": 80}
+  ],
+  "churros": [
+    {"name": "wheat flour", "grams": 200},
+    {"name": "butter", "grams": 80},
+    {"name": "sugar", "grams": 100}
+  ],
+  "clam_chowder": [
+    {"name": "clams", "grams": 300},
+    {"name": "potato", "grams": 200},
+    {"name": "cream", "grams": 200},
+    {"name": "onion", "grams": 100}
+  ],
+  "club_sandwich": [
+    {"name": "bread", "grams": 120},
+    {"name": "chicken", "grams": 100},
+    {"name": "bacon", "grams": 40},
+    {"name": "lettuce", "grams": 30},
+    {"name": "tomato", "grams": 40}
+  ],
+  "crab_cakes": [
+    {"name": "crab", "grams": 300},
+    {"name": "bread crumbs", "grams": 60},
+    {"name": "egg", "grams": 50}
+  ],
+  "creme_brulee": [
+    {"name": "cream", "grams": 400},
+    {"name": "egg", "grams": 100},
+    {"name": "sugar", "grams": 100}
+  ],
+  "croque_madame": [
+    {"name": "bread", "grams": 100},
+    {"name": "ham", "grams": 80},
+    {"name": "cheese", "grams": 60},
+    {"name": "egg", "grams": 50}
+  ],
+  "cup_cakes": [
+    {"name": "wheat flour", "grams": 200},
+    {"name": "sugar", "grams": 150},
+    {"name": "egg", "grams": 100},
+    {"name": "butter", "grams": 80}
+  ],
+  "deviled_eggs": [
+    {"name": "egg", "grams": 300},
+    {"name": "mayonnaise", "grams": 40},
+    {"name": "mustard", "grams": 10}
+  ],
+  "donuts": [
+    {"name": "wheat flour", "grams": 300},
+    {"name": "sugar", "grams": 150},
+    {"name": "egg", "grams": 50},
+    {"name": "butter", "grams": 50}
+  ],
+  "dumplings": [
+    {"name": "flour", "grams": 200},
+    {"name": "pork", "grams": 200},
+    {"name": "cabbage", "grams": 100}
+  ],
+  "edamame": [
+    {"name": "soybeans", "grams": 300}
+  ],
+  "eggs_benedict": [
+    {"name": "egg", "grams": 200},
+    {"name": "english muffin", "grams": 100},
+    {"name": "ham", "grams": 80}
+  ],
+  "escargots": [
+    {"name": "snails", "grams": 200},
+    {"name": "butter", "grams": 80},
+    {"name": "garlic", "grams": 10}
+  ],
+  "falafel": [
+    {"name": "chickpeas", "grams": 300},
+    {"name": "onion", "grams": 80},
+    {"name": "parsley", "grams": 30}
+  ],
+  "filet_mignon": [
+    {"name": "beef tenderloin", "grams": 250},
+    {"name": "butter", "grams": 30}
+  ],
+  "fish_and_chips": [
+    {"name": "white fish", "grams": 250},
+    {"name": "potato", "grams": 300},
+    {"name": "flour", "grams": 100}
+  ],
+  "foie_gras": [
+    {"name": "duck liver", "grams": 200}
+  ],
+  "french_fries": [
+    {"name": "potato", "grams": 300}
+  ],
+  "french_onion_soup": [
+    {"name": "onion", "grams": 400},
+    {"name": "beef broth", "grams": 500},
+    {"name": "bread", "grams": 100},
+    {"name": "cheese", "grams": 80}
+  ],
+  "french_toast": [
+    {"name": "bread", "grams": 120},
+    {"name": "egg", "grams": 100},
+    {"name": "milk", "grams": 60}
+  ],
+  "fried_calamari": [
+    {"name": "squid", "grams": 300},
+    {"name": "flour", "grams": 100}
+  ],
+  "fried_rice": [
+    {"name": "rice", "grams": 300},
+    {"name": "egg", "grams": 100},
+    {"name": "soy sauce", "grams": 15}
+  ],
+  "frozen_yogurt": [
+    {"name": "yogurt", "grams": 400},
+    {"name": "sugar", "grams": 100}
+  ],
+  "garlic_bread": [
+    {"name": "bread", "grams": 200},
+    {"name": "butter", "grams": 80},
+    {"name": "garlic", "grams": 15}
+  ],
+  "gnocchi": [
+    {"name": "potato", "grams": 400},
+    {"name": "flour", "grams": 150},
+    {"name": "egg", "grams": 50}
+  ],
+  "greek_salad": [
+    {"name": "cucumber", "grams": 150},
+    {"name": "tomato", "grams": 150},
+    {"name": "feta cheese", "grams": 80},
+    {"name": "olive oil", "grams": 20}
+  ],
+  "grilled_cheese_sandwich": [
+    {"name": "bread", "grams": 100},
+    {"name": "cheese", "grams": 80},
+    {"name": "butter", "grams": 20}
+  ],
+  "grilled_salmon": [
+    {"name": "salmon", "grams": 250}
+  ],
+  "guacamole": [
+    {"name": "avocado", "grams": 300},
+    {"name": "lime juice", "grams": 30},
+    {"name": "onion", "grams": 40},
+    {"name": "cilantro", "grams": 10}
+  ],
+  "gyoza": [
+    {"name": "flour", "grams": 150},
+    {"name": "pork", "grams": 200},
+    {"name": "cabbage", "grams": 100}
+  ],
+  "hamburger": [
+    {"name": "hamburger bun", "grams": 80},
+    {"name": "ground beef", "grams": 150},
+    {"name": "lettuce", "grams": 20},
+    {"name": "tomato", "grams": 30},
+    {"name": "cheddar cheese", "grams": 30}
+  ],
+  "hot_and_sour_soup": [
+    {"name": "tofu", "grams": 150},
+    {"name": "mushrooms", "grams": 100},
+    {"name": "egg", "grams": 50}
+  ],
+  "hot_dog": [
+    {"name": "hot dog bun", "grams": 60},
+    {"name": "sausage", "grams": 80}
+  ],
+  "huevos_rancheros": [
+    {"name": "egg", "grams": 150},
+    {"name": "tortilla", "grams": 80},
+    {"name": "tomato sauce", "grams": 100},
+    {"name": "cheese", "grams": 40}
+  ],
+  "hummus": [
+    {"name": "chickpeas", "grams": 300},
+    {"name": "tahini", "grams": 60},
+    {"name": "olive oil", "grams": 30},
+    {"name": "lemon juice", "grams": 30}
+  ],
+  "ice_ccream": [
+    {"name": "cream", "grams": 400},
+    {"name": "milk", "grams": 200},
+    {"name": "sugar", "grams": 150}
+  ],
+  "lasagna": [
+    {"name": "lasagna noodles", "grams": 200},
+    {"name": "ground beef", "grams": 300},
+    {"name": "ricotta cheese", "grams": 200},
+    {"name": "mozzarella cheese", "grams": 150},
+    {"name": "tomato sauce", "grams": 200}
+  ],
+  "lobster_bisque": [
+    {"name": "lobster", "grams": 300},
+    {"name": "cream", "grams": 200},
+    {"name": "butter", "grams": 60}
+  ],
+  "lobster_roll_sandwich": [
+    {"name": "lobster", "grams": 200},
+    {"name": "bread roll", "grams": 100},
+    {"name": "mayonnaise", "grams": 30},
+    {"name": "butter", "grams": 20}
+  ],
+  "macaroni_and_cheese": [
+    {"name": "macaroni", "grams": 250},
+    {"name": "cheddar cheese", "grams": 200},
+    {"name": "milk", "grams": 200},
+    {"name": "butter", "grams": 40}
+  ],
+  "macarons": [
+    {"name": "almond flour", "grams": 200},
+    {"name": "sugar", "grams": 200},
+    {"name": "egg white", "grams": 150}
+  ],
+  "miso_soup": [
+    {"name": "miso paste", "grams": 60},
+    {"name": "tofu", "grams": 100},
+    {"name": "seaweed", "grams": 10}
+  ],
+  "mussels": [
+    {"name": "mussels", "grams": 500},
+    {"name": "white wine", "grams": 100},
+    {"name": "butter", "grams": 40},
+    {"name": "garlic", "grams": 10}
+  ],
+  "nachos": [
+    {"name": "tortilla chips", "grams": 200},
+    {"name": "cheese", "grams": 150},
+    {"name": "jalapenos", "grams": 30}
+  ],
+  "omelette": [
+    {"name": "egg", "grams": 200},
+    {"name": "cheese", "grams": 40},
+    {"name": "butter", "grams": 15}
+  ],
+  "onion_rings": [
+    {"name": "onion", "grams": 250},
+    {"name": "flour", "grams": 100}
+  ],
+  "oysters": [
+    {"name": "oysters", "grams": 300}
+  ],
+  "pad_thai": [
+    {"name": "rice noodles", "grams": 200},
+    {"name": "shrimp", "grams": 150},
+    {"name": "peanuts", "grams": 40},
+    {"name": "egg", "grams": 50}
+  ],
+  "panna_cotta": [
+    {"name": "cream", "grams": 400},
+    {"name": "sugar", "grams": 100},
+    {"name": "gelatin", "grams": 10}
+  ],
+  "peking_duck": [
+    {"name": "duck", "grams": 600},
+    {"name": "flour tortilla", "grams": 100},
+    {"name": "hoisin sauce", "grams": 60}
+  ],
+  "pho": [
+    {"name": "rice noodles", "grams": 200},
+    {"name": "beef", "grams": 200},
+    {"name": "beef broth", "grams": 500}
+  ],
+  "pizza": [
+    {"name": "pizza dough", "grams": 150},
+    {"name": "tomato sauce", "grams": 60},
+    {"name": "mozzarella cheese", "grams": 120}
+  ],
+  "pork_chop": [
+    {"name": "pork", "grams": 300},
+    {"name": "butter", "grams": 20}
+  ],
+  "poutine": [
+    {"name": "potato", "grams": 300},
+    {"name": "cheese curds", "grams": 100},
+    {"name": "gravy", "grams": 150}
+  ],
+  "prime_rib": [
+    {"name": "beef", "grams": 400},
+    {"name": "butter", "grams": 30}
+  ],
+  "pulled_pork_sandwich": [
+    {"name": "pork", "grams": 300},
+    {"name": "bread roll", "grams": 100},
+    {"name": "bbq sauce", "grams": 60}
+  ],
+  "ramen": [
+    {"name": "ramen noodles", "grams": 200},
+    {"name": "pork", "grams": 150},
+    {"name": "egg", "grams": 50},
+    {"name": "pork broth", "grams": 400}
+  ],
+  "ravioli": [
+    {"name": "pasta", "grams": 250},
+    {"name": "ricotta cheese", "grams": 150},
+    {"name": "tomato sauce", "grams": 100}
+  ],
+  "red_velvet_cake": [
+    {"name": "wheat flour", "grams": 200},
+    {"name": "sugar", "grams": 200},
+    {"name": "cream cheese", "grams": 200},
+    {"name": "egg", "grams": 100}
+  ],
+  "risotto": [
+    {"name": "rice", "grams": 250},
+    {"name": "butter", "grams": 60},
+    {"name": "parmesan cheese", "grams": 80},
+    {"name": "chicken broth", "grams": 400}
+  ],
+  "samosa": [
+    {"name": "flour", "grams": 200},
+    {"name": "potato", "grams": 200},
+    {"name": "peas", "grams": 80}
+  ],
+  "sashimi": [
+    {"name": "raw fish", "grams": 200}
+  ],
+  "scallops": [
+    {"name": "scallops", "grams": 300},
+    {"name": "butter", "grams": 30}
+  ],
+  "seaweed_salad": [
+    {"name": "seaweed", "grams": 200},
+    {"name": "sesame oil", "grams": 15}
+  ],
+  "shrimp_and_grits": [
+    {"name": "shrimp", "grams": 250},
+    {"name": "grits", "grams": 200},
+    {"name": "butter", "grams": 40},
+    {"name": "cheese", "grams": 40}
+  ],
+  "spaghetti_bolognese": [
+    {"name": "spaghetti", "grams": 250},
+    {"name": "ground beef", "grams": 300},
+    {"name": "tomato sauce", "grams": 200},
+    {"name": "onion", "grams": 80}
+  ],
+  "spaghetti_carbonara": [
+    {"name": "spaghetti", "grams": 250},
+    {"name": "bacon", "grams": 100},
+    {"name": "egg", "grams": 100},
+    {"name": "parmesan cheese", "grams": 50}
+  ],
+  "spring_rolls": [
+    {"name": "spring roll wrapper", "grams": 150},
+    {"name": "cabbage", "grams": 150},
+    {"name": "carrots", "grams": 100}
+  ],
+  "steak": [
+    {"name": "beef steak", "grams": 300},
+    {"name": "butter", "grams": 30}
+  ],
+  "strawberry_shortcake": [
+    {"name": "strawberries", "grams": 300},
+    {"name": "cream", "grams": 200},
+    {"name": "cake", "grams": 200}
+  ],
+  "sushi": [
+    {"name": "sushi rice", "grams": 200},
+    {"name": "raw fish", "grams": 150},
+    {"name": "seaweed", "grams": 10}
+  ],
+  "tacos": [
+    {"name": "tortilla", "grams": 100},
+    {"name": "ground beef", "grams": 150},
+    {"name": "lettuce", "grams": 30},
+    {"name": "tomato", "grams": 40},
+    {"name": "cheese", "grams": 40}
+  ],
+  "takoyaki": [
+    {"name": "flour", "grams": 200},
+    {"name": "octopus", "grams": 150},
+    {"name": "egg", "grams": 100}
+  ],
+  "tiramisu": [
+    {"name": "mascarpone cheese", "grams": 400},
+    {"name": "egg", "grams": 100},
+    {"name": "ladyfingers", "grams": 200},
+    {"name": "coffee", "grams": 100}
+  ],
+  "tuna_tartare": [
+    {"name": "raw tuna", "grams": 200},
+    {"name": "avocado", "grams": 100},
+    {"name": "sesame oil", "grams": 15}
+  ],
+  "waffles": [
+    {"name": "wheat flour", "grams": 200},
+    {"name": "egg", "grams": 100},
+    {"name": "milk", "grams": 200},
+    {"name": "butter", "grams": 60}
+  ]
+}
