@@ -11,7 +11,11 @@
     },
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.arkabhowal.nutai"
+      "bundleIdentifier": "com.arkabhowal.nutai",
+      "infoPlist": {
+        "NSSpeechRecognitionUsageDescription": "This app uses speech recognition to log food items.",
+        "NSMicrophoneUsageDescription": "This app uses the microphone to recognize food items."
+      }
     },
     "android": {
       "adaptiveIcon": {
@@ -21,7 +25,10 @@
         "monochromeImage": "./assets/android-icon-monochrome.png"
       },
       "predictiveBackGestureEnabled": false,
-      "package": "com.arkabhowal.nutai"
+      "package": "com.arkabhowal.nutai",
+      "permissions": [
+        "android.permission.RECORD_AUDIO"
+      ]
     },
     "web": {
       "favicon": "./assets/favicon.png"
@@ -34,7 +41,8 @@
           "photosPermission": "Allow Nut.ai to access your photos for meal scanning."
         }
       ],
-      "react-native-fast-tflite"
+      "react-native-fast-tflite",
+      "expo-speech-recognition"
     ]
   }
 }

@@ -8,96 +8,121 @@ import { LiveTranscript } from './components/LiveTranscript';
 import { IdentifiedItems } from './components/IdentifiedItems';
 import { ManualEntry, ManualEntryToggle } from './components/ManualEntry';
 import { BottomNavBar } from '../home/BottomNavBar';
-import { useTranscript } from './hooks/useTranscript';
-import { type FoodItem, type Phase } from './lib/app';
+import { useVoiceRecognition } from './hooks/useVoiceRecognition';
+import { searchFoodsFromTranscript } from '../../services/VoiceService';
+import { calculateNutrients } from '../../services/DatabaseService';
+import { formatTime } from './lib/app';
+import type { NavId } from './lib/app';
 
 interface VoiceScreenProps {
   onNavigate: (screen: string) => void;
 }
 
 export function VoiceScreen({ onNavigate }: VoiceScreenProps) {
-  const [phase, setPhase] = useState<Phase>('idle');
-  const [items, setItems] = useState<FoodItem[]>([]);
   const [elapsed, setElapsed] = useState(0);
   const [confirmed, setConfirmed] = useState(false);
   const [manualOpen, setManualOpen] = useState(false);
   const [toast, setToast] = useState<string | null>(null);
 
-  const recording = phase === 'recording';
-  const { words, push: pushTranscript, clear: clearTranscript } = useTranscript();
+  const { foods, status, transcript, startListening, stopListening, clearFoods, addFoods } = useVoiceRecognition();
+  const isListening = status === 'listening';
+  const isProcessing = status === 'processing';
 
+  // Timer
   useEffect(() => {
-    if (!recording) return;
+    if (!isListening) return;
     const id = setInterval(() => setElapsed((e) => e + 1), 1000);
     return () => clearInterval(id);
-  }, [recording]);
+  }, [isListening]);
 
+  // Auto-dismiss toast
   useEffect(() => {
     if (!toast) return;
     const id = setTimeout(() => setToast(null), 2400);
     return () => clearTimeout(id);
   }, [toast]);
 
-  const totalKcal = items.reduce((sum, item) => sum + item.kcal, 0);
+  const totalKcal = foods.reduce((sum, f) => sum + f.kcal, 0);
 
   const handleToggleMic = () => {
     if (confirmed) return;
-    if (phase === 'idle') {
+    if (isListening) {
       setElapsed(0);
-      setPhase('recording');
-    } else if (phase === 'recording') {
-      setPhase('paused');
+      stopListening();
     } else {
-      setPhase('recording');
+      setElapsed(0);
+      startListening();
     }
   };
 
   const handleConfirm = () => {
-    if (items.length === 0 || confirmed) return;
+    if (foods.length === 0 || confirmed) return;
     setConfirmed(true);
   };
 
   const handleReset = () => {
-    setPhase('idle');
-    setItems([]);
     setElapsed(0);
     setConfirmed(false);
     setManualOpen(false);
-    clearTranscript();
+    clearFoods();
   };
 
-  const handleManualAdd = (text: string) => {
-    pushTranscript(text);
+  const handleManualAdd = async (text: string) => {
+    const results = await searchFoodsFromTranscript(text);
+    if (results.length > 0) {
+      addFoods(results);
+    }
   };
 
-  const paused = phase === 'paused';
-  const ctaEnabled = paused && items.length > 0 && !confirmed;
+  const paused = !isListening && !isProcessing && elapsed > 0;
+  const ctaEnabled = paused && foods.length > 0 && !confirmed;
 
   return (
     <View style={styles.safeArea}>
       <StatusBar barStyle="dark-content" backgroundColor="#fbfdff" />
-      <TopAppBar title="Voice Log" subtitle="Breakfast · Today" onBack={() => onNavigate('home')} />
+      <TopAppBar title="Voice Log" subtitle="Speak your meal" onBack={() => onNavigate('home')} />
+
+      <Toast message={toast} />
 
       <ScrollView style={styles.scrollView} contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
-        <RecordingVisualizer phase={phase} elapsed={elapsed} onToggle={handleToggleMic} />
-        <LiveTranscript words={words} phase={phase} />
+        <RecordingVisualizer
+          phase={isListening ? 'recording' : paused ? 'paused' : 'idle'}
+          elapsed={elapsed}
+          onToggle={handleToggleMic}
+        />
+
+        <LiveTranscript words={transcript.split(/\s+/).filter(Boolean)} phase={isListening ? 'recording' : 'idle'} />
+
         <View style={styles.manualSection}>
           <ManualEntryToggle open={manualOpen} onToggle={() => setManualOpen((o) => !o)} />
           {manualOpen && <ManualEntry onAdd={handleManualAdd} />}
         </View>
+
         {confirmed && (
           <View style={styles.successCard}>
             <View style={styles.successLeft}>
               <View style={styles.successIcon}><View style={styles.checkDot} /></View>
               <View>
                 <Text style={styles.successTitle}>Logged successfully</Text>
-                <Text style={styles.successSubtitle}>{items.length} items captured</Text>
+                <Text style={styles.successSubtitle}>{foods.length} items captured</Text>
               </View>
             </View>
             <Text style={styles.successKcal}>{totalKcal} kcal</Text>
           </View>
         )}
-        <IdentifiedItems items={items} phase={phase} kcal={totalKcal} confirmed={confirmed} />
+
+        <IdentifiedItems
+          items={foods.map(f => ({
+            id: String(f.id),
+            name: f.name,
+            detail: `per 100g`,
+            kcal: f.kcal,
+            icon: 'food-variant',
+          }))}
+          phase={isListening ? 'recording' : 'paused' ? 'paused' : 'idle'}
+          kcal={totalKcal}
+          confirmed={confirmed}
+        />
       </ScrollView>
 
       {/* CTA button */}

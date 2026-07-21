@@ -9,6 +9,7 @@
     "expo-file-system": "~18.0.12",
     "expo-image-manipulator": "~13.0.6",
     "expo-image-picker": "~16.0.6",
+    "expo-speech-recognition": "^56.0.1",
     "expo-sqlite": "~15.1.4",
     "expo-status-bar": "~2.0.0",
     "react": "^18.3.1",
