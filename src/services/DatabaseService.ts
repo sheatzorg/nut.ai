@@ -76,8 +76,13 @@ export async function initDatabase(): Promise<SQLite.SQLiteDatabase> {
 export async function searchFood(query: string): Promise<FoodResult[]> {
   if (!db) throw new Error('Database not initialized');
 
-  const sanitized = query.trim().toLowerCase().replace(/['"*()]/g, '');
+  // Strip FTS5 special characters to prevent crashes
+  let sanitized = query.trim().toLowerCase().replace(/['"*():^+\-]/g, '');
+  sanitized = sanitized.replace(/"/g, '""');
   if (!sanitized) return [];
+
+  // Wrap in quotes for literal phrase matching + wildcard for prefix
+  const safeFtsQuery = `"${sanitized}"*`;
 
   try {
     // Search USDA foods
@@ -87,7 +92,7 @@ export async function searchFood(query: string): Promise<FoodResult[]> {
        JOIN foods f ON foods_fts.rowid = f.id
        WHERE foods_fts.name MATCH ?
        LIMIT 20`,
-      [`${sanitized}*`]
+      [safeFtsQuery]
     );
 
     // Also search custom foods from user_data.db
