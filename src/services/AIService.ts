@@ -1,5 +1,6 @@
 import { loadTensorflowModel, type TfliteModel } from 'react-native-fast-tflite';
 import { manipulateAsync, SaveFormat } from 'expo-image-manipulator';
+import * as jpeg from 'jpeg-js';
 import { searchFood, type FoodResult } from './DatabaseService';
 
 interface IngredientMapping {
@@ -57,7 +58,7 @@ export async function recognizeFood(imageUri: string): Promise<AIResult | null> 
       { compress: 0.8, format: SaveFormat.JPEG, base64: true }
     );
 
-    // 2. Decode base64 to bytes
+    // 2. Decode base64 to buffer
     const base64 = manipulated.base64;
     if (!base64) throw new Error('No base64 data');
 
@@ -67,13 +68,17 @@ export async function recognizeFood(imageUri: string): Promise<AIResult | null> 
       bytes[i] = binaryString.charCodeAt(i);
     }
 
-    // 3. JPEG has a header — skip it and extract raw pixel data
-    // For a proper implementation, use a JPEG decoder library
-    // Here we assume the image is small enough that bytes contain usable pixel data
+    // 3. Decode JPEG into raw RGBA pixel data
+    const rawImageData = jpeg.decode(Buffer.from(bytes), { useTArray: true });
+    if (!rawImageData || !rawImageData.data) throw new Error('Failed to decode JPEG');
+
+    // 4. Convert RGBA to RGB and normalize to [-1, 1] for MobileNetV3
     const inputTensor = new Float32Array(224 * 224 * 3);
-    const pixelCount = Math.min(bytes.length, 224 * 224 * 3);
-    for (let i = 0; i < pixelCount; i++) {
-      inputTensor[i] = (bytes[i] / 127.5) - 1.0;
+    let tensorIndex = 0;
+    for (let i = 0; i < rawImageData.data.length; i += 4) {
+      inputTensor[tensorIndex++] = (rawImageData.data[i] / 127.5) - 1.0;     // R
+      inputTensor[tensorIndex++] = (rawImageData.data[i + 1] / 127.5) - 1.0; // G
+      inputTensor[tensorIndex++] = (rawImageData.data[i + 2] / 127.5) - 1.0; // B
     }
 
     // 4. Run inference

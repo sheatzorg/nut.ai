@@ -76,7 +76,7 @@ export async function initDatabase(): Promise<SQLite.SQLiteDatabase> {
 export async function searchFood(query: string): Promise<FoodResult[]> {
   if (!db) throw new Error('Database not initialized');
 
-  const sanitized = query.trim().toLowerCase();
+  const sanitized = query.trim().toLowerCase().replace(/['"*()]/g, '');
   if (!sanitized) return [];
 
   try {
