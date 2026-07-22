@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, ActivityIndicator, StyleSheet } from 'react-native';
+import { useFonts } from 'expo-font';
+import { PlusJakartaSans_400Regular, PlusJakartaSans_500Medium, PlusJakartaSans_600SemiBold, PlusJakartaSans_700Bold } from '@expo-google-fonts/plus-jakarta-sans';
 import { DashboardScreen } from './src';
 import { VoiceScreen } from './src/screens/voice/VoiceScreen';
 import { TextScreen } from './src/screens/text/TextScreen';
@@ -13,21 +15,27 @@ type Screen = 'home' | 'voice' | 'text' | 'image';
 export default function App() {
   const [screen, setScreen] = useState<Screen>('home');
   const [ready, setReady] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+
+  const [fontsLoaded] = useFonts({
+    PlusJakartaSans_400Regular,
+    PlusJakartaSans_500Medium,
+    PlusJakartaSans_600SemiBold,
+    PlusJakartaSans_700Bold,
+  });
 
   useEffect(() => {
+    if (!fontsLoaded) return;
     Promise.all([initDatabase(), initUserDatabase(), Promise.resolve(initAI())])
       .then(() => setReady(true))
       .catch((e) => {
         console.error('Init failed:', e);
-        setError(e.message || 'Failed to initialize');
         setReady(true);
       });
-  }, []);
+  }, [fontsLoaded]);
 
   const navigate = (s: string) => setScreen(s as Screen);
 
-  if (!ready) {
+  if (!fontsLoaded || !ready) {
     return (
       <View style={styles.loading}>
         <ActivityIndicator size="large" color="#3b82f6" />
@@ -35,8 +43,6 @@ export default function App() {
       </View>
     );
   }
-
-  if (error) console.warn('Init warning:', error);
 
   switch (screen) {
     case 'voice': return <VoiceScreen onNavigate={navigate} />;

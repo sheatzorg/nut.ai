@@ -42,7 +42,8 @@
         }
       ],
       "react-native-fast-tflite",
-      "expo-speech-recognition"
+      "expo-speech-recognition",
+      "expo-font"
     ]
   }
 }

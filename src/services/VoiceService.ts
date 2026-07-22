@@ -1,4 +1,3 @@
-import { ExpoSpeechRecognitionModule } from 'expo-speech-recognition';
 import { searchFood, type FoodResult } from './DatabaseService';
 
 // Common English filler words to strip from speech
@@ -26,39 +25,6 @@ export type VoiceResult = {
   foods: FoodResult[];
   transcript: string;
 };
-
-/**
- * Request speech recognition permissions.
- */
-export async function requestVoicePermissions(): Promise<boolean> {
-  try {
-    const result = await ExpoSpeechRecognitionModule.requestPermissionsAsync();
-    return result.granted;
-  } catch (e) {
-    console.warn('Voice permission error:', e);
-    return false;
-  }
-}
-
-/**
- * Start listening for speech.
- */
-export function startListening(
-  onResult: (result: VoiceResult) => void,
-  onError: (error: string) => void
-): void {
-  ExpoSpeechRecognitionModule.start({
-    lang: 'en-US',
-    interimResults: false,
-  });
-}
-
-/**
- * Stop listening for speech.
- */
-export function stopListening(): void {
-  ExpoSpeechRecognitionModule.stop();
-}
 
 /**
  * Search foods from transcript text.

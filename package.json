@@ -3,10 +3,12 @@
   "version": "1.0.0",
   "main": "index.ts",
   "dependencies": {
+    "@expo-google-fonts/plus-jakarta-sans": "^0.4.2",
     "@expo/metro-runtime": "~4.0.1",
     "@expo/vector-icons": "~14.0.4",
     "expo": "~52.0.0",
     "expo-file-system": "~18.0.12",
+    "expo-font": "~13.0.4",
     "expo-image-manipulator": "~13.0.6",
     "expo-image-picker": "~16.0.6",
     "expo-speech-recognition": "^56.0.1",
@@ -15,9 +17,6 @@
     "react": "^18.3.1",
     "react-native": "^0.76.9",
     "react-native-fast-tflite": "^3.0.1",
-    "react-native-fs": "^2.20.0",
-    "react-native-image-resizer": "^1.4.5",
-    "react-native-quick-sqlite": "^8.2.7",
     "react-native-svg": "^15.8.0",
     "react-native-web": "~0.19.13"
   },

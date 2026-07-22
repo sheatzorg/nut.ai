@@ -102,21 +102,6 @@ export async function logMeal(items: LogEntry[]): Promise<void> {
 }
 
 /**
- * Get all logs for today.
- */
-export async function getTodayLogs(): Promise<DailyLog[]> {
-  if (!db) throw new Error('User database not initialized');
-
-  const results = await db.getAllAsync<DailyLog>(
-    `SELECT * FROM daily_logs
-     WHERE date(timestamp) = date('now', 'localtime')
-     ORDER BY timestamp DESC`
-  );
-
-  return results;
-}
-
-/**
  * Get total macros for today.
  */
 export async function getTodayTotals(): Promise<DailyTotals> {
@@ -165,39 +150,6 @@ export async function getRecentEntries(limit: number = 10): Promise<DailyLog[]> 
   );
 
   return results;
-}
-
-/**
- * Get daily totals for the past N days.
- */
-export async function getWeeklyTotals(): Promise<Array<{ date: string; kcal: number }>> {
-  if (!db) throw new Error('User database not initialized');
-
-  const results = await db.getAllAsync<{ date: string; kcal: number }>(
-    `SELECT date(timestamp) as date, COALESCE(SUM(kcal), 0) as kcal
-     FROM daily_logs
-     WHERE date(timestamp) >= date('now', '-7 days', 'localtime')
-     GROUP BY date(timestamp)
-     ORDER BY date ASC`
-  );
-
-  return results;
-}
-
-/**
- * Delete a specific log entry.
- */
-export async function deleteLogEntry(id: number): Promise<void> {
-  if (!db) throw new Error('User database not initialized');
-  await db.runAsync('DELETE FROM daily_logs WHERE id = ?', [id]);
-}
-
-/**
- * Clear all logs (for testing/reset).
- */
-export async function clearAllLogs(): Promise<void> {
-  if (!db) throw new Error('User database not initialized');
-  await db.runAsync('DELETE FROM daily_logs');
 }
 
 // ==================== Custom Foods ====================
@@ -251,20 +203,4 @@ export async function searchCustomFoods(query: string): Promise<CustomFood[]> {
   );
 
   return results;
-}
-
-/**
- * Get all custom foods.
- */
-export async function getCustomFoods(): Promise<CustomFood[]> {
-  if (!db) throw new Error('User database not initialized');
-  return db.getAllAsync<CustomFood>('SELECT * FROM custom_foods ORDER BY name ASC');
-}
-
-/**
- * Delete a custom food by ID.
- */
-export async function deleteCustomFood(id: number): Promise<void> {
-  if (!db) throw new Error('User database not initialized');
-  await db.runAsync('DELETE FROM custom_foods WHERE id = ?', [id]);
 }
