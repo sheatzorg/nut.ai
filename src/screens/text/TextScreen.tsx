@@ -8,6 +8,7 @@ import { LiveRecognition } from './components/LiveRecognition';
 import { ReviewItems } from './components/ReviewItems';
 import { Analyzing } from './components/Analyzing';
 import { NutritionResult } from './components/NutritionResult';
+import { CustomFoodForm } from './components/CustomFoodForm';
 import { BottomNavBar } from '../home/BottomNavBar';
 import { useRecognition } from './hooks/useRecognition';
 import { roundMacros, sumMacros } from './lib/nutrition';
@@ -25,6 +26,7 @@ export function TextScreen({ onNavigate }: TextScreenProps) {
   const [rawText, setRawText] = useState('');
   const [items, setItems] = useState<EditItem[]>([]);
   const [toast, setToast] = useState<string | null>(null);
+  const [showCustomForm, setShowCustomForm] = useState(false);
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const { items: liveItems, status } = useRecognition(rawText);
@@ -119,6 +121,26 @@ export function TextScreen({ onNavigate }: TextScreenProps) {
   const remove = (uid: string) =>
     setItems((prev) => prev.filter((i) => i.uid !== uid));
 
+  const handleCustomFoodSaved = (food: any) => {
+    setShowCustomForm(false);
+    // Add the custom food to items
+    setItems((prev) => [
+      ...prev,
+      {
+        id: String(food.id),
+        name: food.name,
+        quantity: 100,
+        unit: 'g',
+        step: 25,
+        matchedText: 'custom',
+        perUnit: { kcal: food.kcal, protein: food.protein, carbs: food.carb, fat: food.fat },
+        uid: `${food.id}-${Date.now()}`,
+        approved: true,
+      },
+    ]);
+    setToast(`Added ${food.name}`);
+  };
+
   const ctaLabel =
     stage === 'compose' ? 'Review & verify' :
     stage === 'verify' ? 'Calculate nutrition' : 'Log & start new';
@@ -148,7 +170,14 @@ export function TextScreen({ onNavigate }: TextScreenProps) {
         {stage === 'compose' && (
           <>
             <MealInput value={rawText} onChange={setRawText} />
-            <LiveRecognition items={liveItems} recognizing={recognizing} hasText={rawText.trim().length > 0} error={recognitionError} />
+            <LiveRecognition items={liveItems} recognizing={recognizing} hasText={rawText.trim().length > 0} error={recognitionError} onAddCustom={() => setShowCustomForm(true)} />
+            {showCustomForm && (
+              <CustomFoodForm
+                searchQuery={rawText.trim()}
+                onSaved={handleCustomFoodSaved}
+                onCancel={() => setShowCustomForm(false)}
+              />
+            )}
           </>
         )}
         {stage === 'verify' && (

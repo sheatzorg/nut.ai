@@ -57,6 +57,17 @@ export async function initUserDatabase(): Promise<SQLite.SQLiteDatabase> {
       fiber REAL DEFAULT 0,
       source TEXT DEFAULT 'text'
     );
+
+    CREATE TABLE IF NOT EXISTS custom_foods (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      name TEXT NOT NULL UNIQUE,
+      kcal REAL DEFAULT 0,
+      protein REAL DEFAULT 0,
+      fat REAL DEFAULT 0,
+      carb REAL DEFAULT 0,
+      fiber REAL DEFAULT 0,
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    );
   `);
 
   console.log('User database initialized');
@@ -187,4 +198,73 @@ export async function deleteLogEntry(id: number): Promise<void> {
 export async function clearAllLogs(): Promise<void> {
   if (!db) throw new Error('User database not initialized');
   await db.runAsync('DELETE FROM daily_logs');
+}
+
+// ==================== Custom Foods ====================
+
+export interface CustomFood {
+  id: number;
+  name: string;
+  kcal: number;
+  protein: number;
+  fat: number;
+  carb: number;
+  fiber: number;
+  created_at: string;
+}
+
+/**
+ * Add a custom food to the database.
+ */
+export async function addCustomFood(
+  name: string,
+  kcal: number,
+  protein: number,
+  fat: number,
+  carb: number,
+  fiber: number = 0
+): Promise<number> {
+  if (!db) throw new Error('User database not initialized');
+
+  const result = await db.runAsync(
+    `INSERT INTO custom_foods (name, kcal, protein, fat, carb, fiber)
+     VALUES (?, ?, ?, ?, ?, ?)`,
+    [name, kcal, protein, fat, carb, fiber]
+  );
+
+  console.log(`Added custom food: ${name}`);
+  return result.lastInsertRowId;
+}
+
+/**
+ * Search custom foods by name (partial match).
+ */
+export async function searchCustomFoods(query: string): Promise<CustomFood[]> {
+  if (!db) throw new Error('User database not initialized');
+
+  const results = await db.getAllAsync<CustomFood>(
+    `SELECT * FROM custom_foods
+     WHERE name LIKE ?
+     ORDER BY name ASC
+     LIMIT 20`,
+    [`%${query}%`]
+  );
+
+  return results;
+}
+
+/**
+ * Get all custom foods.
+ */
+export async function getCustomFoods(): Promise<CustomFood[]> {
+  if (!db) throw new Error('User database not initialized');
+  return db.getAllAsync<CustomFood>('SELECT * FROM custom_foods ORDER BY name ASC');
+}
+
+/**
+ * Delete a custom food by ID.
+ */
+export async function deleteCustomFood(id: number): Promise<void> {
+  if (!db) throw new Error('User database not initialized');
+  await db.runAsync('DELETE FROM custom_foods WHERE id = ?', [id]);
 }

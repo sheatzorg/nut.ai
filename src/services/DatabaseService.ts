@@ -80,7 +80,8 @@ export async function searchFood(query: string): Promise<FoodResult[]> {
   if (!sanitized) return [];
 
   try {
-    const results = await db.getAllAsync<FoodResult>(
+    // Search USDA foods
+    const usdaResults = await db.getAllAsync<FoodResult>(
       `SELECT f.id, f.name, f.kcal, f.protein, f.fat, f.carb, f.fiber
        FROM foods_fts
        JOIN foods f ON foods_fts.rowid = f.id
@@ -88,7 +89,27 @@ export async function searchFood(query: string): Promise<FoodResult[]> {
        LIMIT 20`,
       [`${sanitized}*`]
     );
-    return results;
+
+    // Also search custom foods from user_data.db
+    let customResults: FoodResult[] = [];
+    try {
+      const { searchCustomFoods } = require('./UserDataService');
+      const customFoods = await searchCustomFoods(sanitized);
+      customResults = customFoods.map((cf: any) => ({
+        id: 1000000 + cf.id, // Offset IDs to avoid collision with USDA
+        name: cf.name,
+        kcal: cf.kcal,
+        protein: cf.protein,
+        fat: cf.fat,
+        carb: cf.carb,
+        fiber: cf.fiber,
+      }));
+    } catch (e) {
+      // UserDataService might not be initialized yet
+    }
+
+    // Merge results, USDA first, then custom
+    return [...usdaResults, ...customResults].slice(0, 20);
   } catch (e) {
     console.error('Search error:', e);
     return [];

@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { MaterialIcons, MaterialCommunityIcons } from '@expo/vector-icons';
 import type { FoodResult } from '../../../services/DatabaseService';
 import type { RecognitionStatus } from '../hooks/useRecognition';
@@ -9,9 +9,10 @@ interface LiveRecognitionProps {
   recognizing: boolean;
   hasText: boolean;
   error: boolean;
+  onAddCustom?: () => void;
 }
 
-export function LiveRecognition({ items, recognizing, hasText, error }: LiveRecognitionProps) {
+export function LiveRecognition({ items, recognizing, hasText, error, onAddCustom }: LiveRecognitionProps) {
   const empty = items.length === 0;
 
   return (
@@ -58,6 +59,12 @@ export function LiveRecognition({ items, recognizing, hasText, error }: LiveReco
               ? 'No foods recognized — try different names.'
               : 'Start typing — foods from the USDA database appear here.'}
           </Text>
+          {hasText && onAddCustom && (
+            <TouchableOpacity style={styles.addCustomButton} onPress={onAddCustom} activeOpacity={0.8}>
+              <MaterialCommunityIcons name="plus" size={16} color="#3b82f6" />
+              <Text style={styles.addCustomText}>Can't find it? Add Custom Food</Text>
+            </TouchableOpacity>
+          )}
         </View>
       ) : (
         <View style={styles.itemsList}>
@@ -105,6 +112,12 @@ const styles = StyleSheet.create({
   },
   emptyIcon: { width: 44, height: 44, borderRadius: 16, backgroundColor: '#eff6ff', alignItems: 'center', justifyContent: 'center' },
   emptyText: { fontSize: 14, fontWeight: '500', color: '#475569', textAlign: 'center', maxWidth: 240 },
+  addCustomButton: {
+    flexDirection: 'row', alignItems: 'center', gap: 6,
+    marginTop: 8, paddingHorizontal: 16, paddingVertical: 8,
+    borderRadius: 999, borderWidth: 1, borderColor: '#3b82f6',
+  },
+  addCustomText: { fontSize: 13, fontWeight: '600', color: '#3b82f6' },
   itemsList: { gap: 8 },
   itemCard: {
     flexDirection: 'row', alignItems: 'center', gap: 10,
