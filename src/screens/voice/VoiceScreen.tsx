@@ -11,8 +11,6 @@ import { BottomNavBar } from '../home/BottomNavBar';
 import { useVoiceRecognition } from './hooks/useVoiceRecognition';
 import { searchFoodsFromTranscript } from '../../services/VoiceService';
 import { logMeal } from '../../services/UserDataService';
-import { formatTime } from './lib/app';
-import type { NavId } from './lib/app';
 
 interface VoiceScreenProps {
   onNavigate: (screen: string) => void;
