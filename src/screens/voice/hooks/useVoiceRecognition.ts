@@ -1,51 +1,31 @@
-import { useState, useCallback } from 'react';
-import { ExpoSpeechRecognitionModule, useSpeechRecognitionEvent } from 'expo-speech-recognition';
+import { useState, useCallback, useRef } from 'react';
 import { searchFoodsFromTranscript } from '../../../services/VoiceService';
 import type { FoodResult } from '../../../services/DatabaseService';
 
 export type VoiceRecognitionStatus = 'idle' | 'listening' | 'processing' | 'error';
 
-/**
- * Hook that wraps speech recognition and food detection.
- * Returns recognized foods from spoken words.
- */
+// Try to load speech module — fails gracefully in Expo Go
+let ExpoSpeechRecognitionModule: any = null;
+try {
+  ExpoSpeechRecognitionModule = require('expo-speech-recognition').ExpoSpeechRecognitionModule;
+} catch (e) {
+  // Native module not available (Expo Go)
+}
+
 export function useVoiceRecognition() {
   const [foods, setFoods] = useState<FoodResult[]>([]);
   const [status, setStatus] = useState<VoiceRecognitionStatus>('idle');
   const [transcript, setTranscript] = useState('');
-
-  // Listen for speech results
-  useSpeechRecognitionEvent('result', async (event) => {
-    const text = event.results?.[0]?.transcript || '';
-    if (text) {
-      setTranscript(text);
-
-      // If this is a final result, process it
-      if (event.isFinal) {
-        setStatus('processing');
-        const results = await searchFoodsFromTranscript(text);
-        setFoods(results);
-        setStatus('idle');
-      }
-    }
-  });
-
-  // Listen for errors
-  useSpeechRecognitionEvent('error', (event) => {
-    console.error('Speech error:', event.error);
-    setStatus('error');
-  });
-
-  // Listen for speech end
-  useSpeechRecognitionEvent('speechend', () => {
-    if (status === 'listening') {
-      setStatus('idle');
-    }
-  });
+  const transcriptRef = useRef(transcript);
+  transcriptRef.current = transcript;
 
   const startListening = useCallback(async () => {
+    if (!ExpoSpeechRecognitionModule) {
+      setStatus('error');
+      return;
+    }
+
     try {
-      // Request permissions first
       const result = await ExpoSpeechRecognitionModule.requestPermissionsAsync();
       if (!result.granted) {
         setStatus('error');
@@ -59,27 +39,56 @@ export function useVoiceRecognition() {
         lang: 'en-US',
         interimResults: true,
       });
+
+      // Listen for results
+      ExpoSpeechRecognitionModule.addListener?.('result', async (event: any) => {
+        const text = event.results?.[0]?.transcript || '';
+        if (text) {
+          setTranscript(text);
+          if (event.isFinal) {
+            setStatus('processing');
+            const results = await searchFoodsFromTranscript(text);
+            setFoods(results);
+            setStatus('idle');
+          }
+        }
+      });
+
+      ExpoSpeechRecognitionModule.addListener?.('error', () => {
+        setStatus('error');
+      });
+
+      ExpoSpeechRecognitionModule.addListener?.('speechend', () => {
+        if (transcriptRef.current.trim()) {
+          setStatus('processing');
+          searchFoodsFromTranscript(transcriptRef.current).then((results) => {
+            setFoods(results);
+            setStatus('idle');
+          });
+        } else {
+          setStatus('idle');
+        }
+      });
     } catch (e) {
-      console.error('Failed to start speech recognition:', e);
+      console.error('Speech recognition failed:', e);
       setStatus('error');
     }
   }, []);
 
   const stopListening = useCallback(async () => {
     try {
-      ExpoSpeechRecognitionModule.stop();
+      ExpoSpeechRecognitionModule?.stop();
     } catch (e) {
       // Ignore
     }
 
-    // Process whatever transcript we have
-    if (transcript.trim()) {
+    if (transcriptRef.current.trim()) {
       setStatus('processing');
-      const results = await searchFoodsFromTranscript(transcript);
+      const results = await searchFoodsFromTranscript(transcriptRef.current);
       setFoods(results);
     }
     setStatus('idle');
-  }, [transcript]);
+  }, []);
 
   const clearFoods = useCallback(() => {
     setFoods([]);
